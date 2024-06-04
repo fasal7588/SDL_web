@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Driving Licence Login Form</title>
+  <link rel="stylesheet" href="css/login.css">
+</head>
+
+<body style="background-image: url('images/Login.png');background-repeat: no-repeat;background-attachment: fixed;background-size: cover;font-family: 'Aligarh', Arial, sans-serif;">
+  
+    <br>
+    <div class='grandParentContaniner'>
+        <div class='parentContainer'>
+            <div class='frame'>
+                <h2> Welcome Back! </h2>
+
+                <div class="btn-container">
+                    <input type="text" class="btn" placeholder="Enter License Number" id="licenseNumber" required>
+                    <input type="password" class="btn" placeholder="Enter Password" id="password" required>
+                    <br><br>
+                    <div class="forget">
+
+                      <label for="adminButton" class="adminLinkContainer2">
+                        <a href="admin-log.html">Forgot password?</a>
+                      </label>
+                     
+                    </div>
+                    
+<br>
+                    <input type="submit" class="button" value="Log In" onclick="validateLogin()"></div> <br>
+                    <div class="register">
+                        <p>Don't have an account? <a href="register.html">Register here</a></p>
+                    </div>  
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+
+async function validateLogin() {
+  var licenseNumber = document.getElementById("licenseNumber").value;
+  var password = document.getElementById("password").value;
+
+  console.log("Sending login request with:", { licenseNumber, password });
+
+  try {
+    const response = await fetch('/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ licenseNumber, password }),
+    });
+
+    const data = await response.json();
+
+    console.log("Received response:", data);
+
+    if (data.success) {
+      // Store user details in local storage
+      localStorage.setItem('userDetails', JSON.stringify(data.userDetails));
+      console.log("User details stored in local storage:", data.userDetails);
+      
+      // Redirect to dashboard
+      window.location.href = "Dashboard.html";
+    } else {
+      // Display error message
+      alert("Invalid license number or password. Please try again.");
+    }
+  } catch (error) {
+    console.error('Error during login:', error);
+    alert("An error occurred during login. Please try again later.");
+  }
+}
+</script>
+
+  </div>
+
+</body>
+
+</html>

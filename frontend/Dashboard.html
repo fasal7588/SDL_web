@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    
+</head>
+
+<body>
+
+    <header style="display: flex; align-items: center;">
+        <a class="logo" href="/"><img src="Images/logo.png" alt="logo" style="width: 50px;"></a>
+        <input type ="button" class="cta" href="payment.html" value = "Pay Fines" style="margin-right: 10px;"></a>
+        <input type="button" class="cta" value="Logout" onclick="window.location.href='/'">
+    
+    </header>
+    
+
+<div class="main-container">
+    <div class="sidebar">
+        <ul>
+            <li><a href="qr.html"><i class="fas fa-columns"></i> Dashboard</a></li>
+            <li><a href="about.html"><i class="fas fa-users"></i> About Us</a></li>
+            <li><a href="help.html"><i class="fas fa-question-circle"></i> Help</a></li>
+        </ul>
+    </div>
+    <div id="content">
+
+        <p>DashBoard</p>
+
+        <div class="first_line">
+            <p>Realtime insight on various activities.</p>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th>
+                    <div class="second_line">
+                        <p>Outstanding Fines</p>
+                    </div>
+                </th>
+                <th>
+                    <div class="second_line">
+                        <p> License Details</p>
+                    </div>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th>
+                    <div class="card">
+                        <table>
+                            <div class="outstanding-fines">
+                                <div id="outstandingFinesContainer"></div>
+                                <!--Outstanding fines will be populated dynamically -->
+                            </div>
+                        </table>
+                    </div>
+                    <div class="second_line">
+                        <p>Fine History</p>
+                    </div>
+                    <div class="card">
+                        <table>
+                            <thead>
+                            <tr class="d">
+                                <th>Violation Type</th>
+                                <th >Policeman Name</th>
+                                <th >Date</th>
+                                <th class="b">Amount</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- Fine history rows will be populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </th>
+                <th class="i">
+                    <div class="card2">
+                        <table>
+                            <thead>
+                            <tr class="g">
+                                <th colspan="2" class="g">Driving license</th>
+                            </tr>
+                            <tr class="space-row"></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td rowspan="8"><img id="userImage" src="" width="100"></td>
+                                    <td class="h">License Holder's Name:</td>
+                                </tr>
+                                
+                            <tr>
+                                <td class="f" id="name"></td>
+                            </tr>
+                            <tr>
+                                <td class="h">DOB:</td>
+                            </tr>
+                            <tr>
+                                <td class="f" id="dob"></td>
+                            </tr>
+                            <td class="h">Address:</td>
+                            </tr>
+                            <tr>
+                                <td class="f" id="address"></td>
+                            </tr>
+                            <tr>
+                                <td class="h">Blood Type:</td>
+                            </tr>
+                            <tr>
+                                <td class="f">B+</td>
+                            </tr>
+                            <tr>
+                                <td class="h">Date of Issue:</td>
+                                <td class="h">License Class:</td>
+                            </tr>
+                            <tr>
+                                <td class="f" id="doi"></td>
+                                <td class="f" id="VC"></td>
+                            </tr>
+                            <tr>
+                                <td class="h">Expiry Date:</td>
+                                <td class="h">License Number:</td>
+                            </tr>
+                            <tr>
+                                <td class="f" id="doe"></td>
+                                <td class="f" id="lC"></td>
+                            </tr>
+                            <tr>
+                                <td class="h">Issuing Authority:</td>
+                                <td class="h">Administrative Number:</td>
+                            </tr>
+                            <tr>
+                                <td class="f">ID Number: </td>
+                                <td class="f" id="ID"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="qr">
+                        <div class="second_line">
+                            <div id="urlDisplay" ></div> <!-- This is where the URL will be displayed -->
+                        </div>
+                    </div>
+                    
+                </th>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    window.onload = async function () {
+        const userDetails = JSON.parse(localStorage.getItem('userDetails'));
+
+        if (userDetails) {
+            try {
+                // Fetch outstanding fines
+                const finesResponse = await fetch('/api/outstandingFines', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ licenseNumber: userDetails.lC }), // Send licenseNumber instead of driverLicenseNumber
+                });
+
+                const finesData = await finesResponse.json();
+
+                if (finesData.success) {
+                    const finesContainer = document.getElementById('outstandingFinesContainer');
+                    if (finesData.fines.length > 0) {
+                        finesContainer.innerHTML = ''; // Clear previous content
+                        finesData.fines.forEach(fine => {
+                            finesContainer.innerHTML += `
+                            
+                                <div class="fine">
+                                    </br>
+                                    </br>
+                                    <table>
+                                    <tr>
+                                    <td class="r"><p> ${fine.name}</p></td>
+                                    </br>
+                                    </tr>
+                                    <tr>
+                                    <td><p><strong>LKR</strong> ${fine.amount}<strong>.00</strong></p></td>
+                                    <td rowspan="2" class="pay-now-cell"><button class="pay-now-btn">Pay Now</button></td>
+                                    </tr>
+                                    </table>
+                                    </br>
+                                    <br>
+                                </div>
+                            `;
+                        });
+                    } else {
+                        finesContainer.innerHTML = '<p></br>No outstanding fines for </p>';
+                    }
+                } else {
+                    // Display error message in case of failure
+                    const finesContainer = document.getElementById('outstandingFinesContainer');
+                    finesContainer.innerHTML = `<p>${finesData.error}</p>`;
+                }
+
+                // Populate license details
+                document.getElementById('name').innerText = userDetails.name || 'N/A';
+                document.getElementById('dob').innerText = userDetails.dob || 'N/A';
+                document.getElementById('address').innerText = userDetails.address || 'N/A';
+                document.getElementById('doi').innerText = userDetails.doi || 'N/A';
+                document.getElementById('doe').innerText = userDetails.doe || 'N/A';
+                document.getElementById('ID').innerText = userDetails.ID || 'N/A';
+                document.getElementById('VC').innerText = userDetails.VC || 'N/A';
+                document.getElementById('lC').innerText = userDetails.lC || 'N/A';
+
+                // Set user image
+        const userImage = document.getElementById('userImage');
+        userImage.src = userDetails.image || 'default-image-url.jpg';
+
+                 // Function to handle download button click
+        window.downloadQR = function(url) {
+            window.location.href = url; // Navigate to the URL
+        };
+
+        // Display the "Click to download" button
+        // Display the "Click to download" button
+const userUrl = userDetails.url; // Replace 'url' with the actual property name where the URL is stored
+const urlDisplay = document.getElementById('urlDisplay');
+urlDisplay.innerHTML = `<button class="download-btn" onclick="downloadQR('${userUrl}')">Download QR Code</button>`;
+
+
+            } catch (error) {
+                console.error('Error retrieving data:', error);
+                // Display error message in case of exception
+                const finesContainer = document.getElementById('outstandingFinesContainer');
+                finesContainer.innerHTML = '<p>An error occurred while retrieving data. Please try again later.</p>';
+            }
+        } else {
+            console.log("User details not found in local storage.");
+        }
+
+        // Attach event listener to all "Pay Now" buttons
+        const payNowButtons = document.querySelectorAll('.pay-now-btn');
+        payNowButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                window.location.href = 'payment.html';
+            });
+        });
+    };
+</script>
+
+
+</body>
+
+</html>

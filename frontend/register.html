@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Driving Licence Registration Form</title>
+  <link rel="stylesheet" href="css/login.css"> <!-- Link to external CSS file -->
+</head>
+
+<body style="background-image: url('images/Login.png');background-repeat: no-repeat;background-attachment: fixed;background-size: cover;font-family: 'Aligarh', Arial, sans-serif;">
+  
+  <br>
+    <div class='grandParentContaniner'>
+        <div class='parentContainer'>
+            <div class='frame'>
+                <h2> Get Started </h2>
+
+                <div class="btn-container">
+                    
+                    <input type="text" class="btn" placeholder="Enter License Number" id="licenseNumber" required>
+
+                    
+                    <input type="password" class="btn" placeholder="Enter Password" id="password" required>
+
+                    
+                    <input type="password" class="btn" placeholder="Re-Enter Password" id="confirmpassword" required>
+                    
+
+
+                    <input type="submit" class="button" value="Sign Up" onclick="validateLogin()"></div> <br>
+                    <div class="register">
+                        <p>Already have an Account ?<a href="login.html">Log In</a></p>
+                    </div>  
+                </div>
+            </div>
+        </div>
+    </div>
+
+  <script>
+    async function registerUser() {
+      var licenseNumber = document.getElementById('licenseNumber').value;
+      var password = document.getElementById('password').value;
+      var confirmPassword = document.getElementById('confirmPassword').value;
+  
+      // Perform password confirmation
+      if (password !== confirmPassword) {
+        alert("Passwords do not match. Please try again.");
+        return; // Prevent further execution
+      }
+  
+      // Prepare user data for registration
+      const userData = {
+        licenseNumber,
+        password
+      };
+  
+      try {
+        const response = await fetch('/api/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(userData),
+        });
+  
+        const data = await response.json();
+  
+        if (response.ok) {
+          alert(data.message); // Registration successful message
+          window.location.href = "login.html"; // Redirect to login page
+        } else {
+          alert(data.error); // Display registration error message
+        }
+      } catch (error) {
+        console.error('Error during registration:', error);
+        alert("An error occurred during registration. Please try again later.");
+      }
+    }
+  </script>
+  
+</body>
+
+</html>

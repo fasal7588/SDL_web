@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Authentication</title>
+    <link rel="stylesheet" href="css/login.css">   
+    <style>
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .button {
+            font-size: 16px;
+            margin: 10px;
+            width: 200px; /* Fixed width for buttons */
+        }
+
+        .frame {
+            width: 300px; /* Fixed width for frame */
+            margin: auto; /* Center align the frame */
+        }
+    </style>
+</head>
+
+<body style="background-image: url('images/Login.png');background-repeat: no-repeat;background-attachment: fixed;background-size: cover;font-family: 'Aligarh', Arial, sans-serif;">
+    <div class='grandParentContaniner'>
+        <div class='parentContainer'>
+            <div class='frame'>
+                <h2> Forgot Password </h2>
+
+                <form>
+                    <div class="btn-container">
+                        <input type="text" class="btn" placeholder="Enter License Number" id="licenseNumber" required> 
+                        <div class="input-field" id="phoneNumberField" style="display: none;">
+                            <input type="text" id="phoneNumber" class="btn" placeholder="Enter your phone Number" required>
+                            <label>Enter your Phone number</label>
+                        </div>
+                        <div class="input-field" id="otpField" style="display: none;">
+                            <input type="password" id="otp" placeholder="Enter OTP" required>
+                            <label>Enter OTP</label>
+                        </div>
+                        <div class="input-field" id="newPasswordField" style="display: none;">
+                            <input type="password" id="newPassword" placeholder="Enter New Password" required>
+                            <label for="newPassword">Enter New Password</label>
+                        </div>
+                        <div class="input-field" id="confirmPasswordField" style="display: none;">
+                            <input type="password" id="confirmPassword" placeholder="Re enter New Password" required>
+                            <label for="confirmPassword">Re-enter New Password</label>
+                        </div>
+                        <button type="button" class="button" id="submitLicenseNumber">Submit </button>
+                        <button type="button" class="button" id="submitPhoneNumber" style="display: none;">Submit </button>
+                        <button type="button" class="button" id="submitOTP" style="display: none;">Submit </button>
+                        <button type="button" class="button" id="submitNewPassword" style="display: none;" onclick="redirectToLoginPage()">Submit </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("submitLicenseNumber").addEventListener("click", function () {
+            var licenseNumber = document.getElementById("licenseNumber").value;
+            if (licenseNumber.trim() === "") {
+                alert("Please enter your License number.");
+                return;
+            }
+            // Show phone number field
+            document.getElementById("phoneNumberField").style.display = "block";
+            document.getElementById("submitLicenseNumber").style.display = "none";
+            document.getElementById("submitPhoneNumber").style.display = "block";
+        });
+
+        document.getElementById("submitPhoneNumber").addEventListener("click", function () {
+            var phoneNumber = document.getElementById("phoneNumber").value;
+            if (phoneNumber.trim() === "") {
+                alert("Please enter your phone number.");
+                return;
+            }
+            // Hide phone number field, show OTP field
+            document.getElementById("phoneNumberField").style.display = "none";
+            document.getElementById("otpField").style.display = "block";
+            document.getElementById("submitPhoneNumber").style.display = "none";
+            document.getElementById("submitOTP").style.display = "block";
+        });
+
+        document.getElementById("submitOTP").addEventListener("click", function () {
+            var otp = document.getElementById("otp").value;
+            if (otp.trim() === "") {
+                alert("Please enter the OTP.");
+                return;
+            }
+            // Hide OTP field, show new password fields
+            document.getElementById("otpField").style.display = "none";
+            document.getElementById("newPasswordField").style.display = "block";
+            document.getElementById("confirmPasswordField").style.display = "block";
+            document.getElementById("submitOTP").style.display = "none";
+            document.getElementById("submitNewPassword").style.display = "block";
+        });
+
+        function redirectToLoginPage() {
+            // Display a popup message
+            alert("Password successfully changed. Redirecting to login page.");
+            // Redirect to the login page
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+</html>
